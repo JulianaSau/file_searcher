@@ -180,9 +180,9 @@ int main(int argc, char* argv[], char* envp[])
 	int countFilesWatched = 0;
 
 	char path[PATH_MAX];
-	sprintf(path, "%s", argv[1]);
+	sprintf(path, "%s", argv[2]);
 
-	int retVal = SearchFile(path, &countFilesWatched, argv[2]);
+	int retVal = SearchFile(path, &countFilesWatched, argv[1]);
 
 	if (retVal == 1) {
 
