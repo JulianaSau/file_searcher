@@ -10,7 +10,7 @@ void listFiles(const char* dirname){
         return;
     }
     
-    printf("Reading files in %s\n, dirname");
+    printf("Reading files in %s\n", dirname);
 //     //Skipping . and ..
 // 	readdir(dd);
 // 	readdir(dd);
@@ -19,9 +19,9 @@ void listFiles(const char* dirname){
     entity = readdir(dir);// could give null 
     
     while(entity != NULL){
-        print("%hhd %s/%s\n", entity->d_type,dirname, entity->d_name);
+        printf("%hhd %s/%s\n", entity->d_type,dirname, entity->d_name);
         //if there is a directory in the results of search, pritn out
-        if(entity->d_type == DT_DIR && strcmp(entity=<d_name, "." && strcmp(entity=<d_name, "..") != 0){
+        if(entity->d_type == DT_DIR && strcmp(entity->d_name, ".") && strcmp(entity->d_name, "..") != 0){
             char path[100] = {0};
             strcat(path, dirname);
             strcat(path, "/");
