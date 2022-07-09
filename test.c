@@ -35,6 +35,10 @@ void listFiles(const char* dirname){
 }
 
 int main(int argc, char* argv[]) {
+
+    if(argc != 3)
+    {
+    	printf("
     listFiles(".");
     return 0;
 }
