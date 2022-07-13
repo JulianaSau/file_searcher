@@ -158,8 +158,15 @@ int main(int argc, char *argv[], char *envp[])
     sprintf(path, "%s", argv[2]);
 
     char search_param[255];
-    sprintf(search_param, "%s", argv[3]);
-    printf("3rd arg %s\n", argv[3]);
+    if (argv[3] == NULL)
+    {
+        sprintf(search_param, "%s", NULL);
+    }
+    else
+    {
+
+        sprintf(search_param, "%s", argv[3]);
+    }
 
     int return_value = file_searcher(path, argv[1], search_param);
 
