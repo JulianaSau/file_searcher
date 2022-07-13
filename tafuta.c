@@ -31,7 +31,7 @@
  * @return int
  *
  */
-int file_searcher(char *rootPath, char *fileName)
+int file_searcher(char *rootPath, char *fileName, char *searchParam)
 {
     POrderNode directory_list = NULL;
     int fileFound = FALSE;
@@ -154,6 +154,13 @@ int main(int argc, char *argv[], char *envp[])
 
     char path[PATH_MAX];
     sprintf(path, "%s", argv[2]);
+
+    char search_param[255];
+    if (argv[3] != NULL)
+    {
+        sprintf(search_param, "%s", argv[3]);
+        printf(search_param);
+    }
 
     int return_value = file_searcher(path, argv[1]);
 
