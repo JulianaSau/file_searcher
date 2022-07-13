@@ -78,7 +78,7 @@ void printError(char *fullPath, char *message, char *filename)
  * @brief
  *
  */
-int search_file(const char *filename, const char *search)
+int search_file(FILE *filename, const char *search)
 {
     FILE *fp;
     char ch;
@@ -90,6 +90,15 @@ int search_file(const char *filename, const char *search)
 
     /*  open for writing */
     fp = fopen(filename, "r");
+
+    /* Exit if file not opened successfully */
+    if (fp == NULL)
+    {
+        printf("Unable to open file.\n");
+        printf("Please check you have read/write previleges.\n");
+
+        exit(EXIT_FAILURE);
+    }
 
     do
     {
