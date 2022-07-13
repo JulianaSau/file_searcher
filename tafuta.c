@@ -19,32 +19,29 @@
  * @param countFilesWatched - counts the files that have been searched
  * @param fileName - name of the file to search for
  * @return int
+ *
  */
-
-int file_searcher(char *rootPath, int *countFilesWatched, char *fileName)
+int file_searcher(char *rootPath, char *fileName)
 {
-    POrderNode dirsToLook = NULL;
+    POrderNode directory_list = NULL;
     int fileFound = FALSE;
 
-    DIR *dd = opendir(rootPath);
-    if (!dd)
+    DIR *dir = opendir(rootPath);
+    if (!dir)
         return (printError(rootPath, "erroropendir", rootPath), -1);
 
     // Skipping . and ..
-    readdir(dd);
-    readdir(dd);
+    readdir(dir);
+    readdrir(dir);
 
-    for (struct dirent *entity = readdir(dd); entity; entity = readdir(dd))
+    for (struct dirent *entity = readdir(dir); entity; entity = readdir(dir))
     {
-
-        (*countFilesWatched)++;
-
         char fullPath[PATH_MAX];
         sprintf(fullPath, "%s/%s", strcmp(rootPath, "/") == 0 ? "" : rootPath, entity->d_name);
         struct stat ed = {0};
-        int retVal = stat(fullPath, &ed);
+        int return_value = stat(fullPath, &ed);
 
-        if (retVal == 0)
+        if (return_value == 0)
         {
 
             unsigned char dMode = ed.st_mode >> 15 & 7;
@@ -57,7 +54,7 @@ int file_searcher(char *rootPath, int *countFilesWatched, char *fileName)
                 if (!buffer)
                     return fprintf(stderr, "Error when trying to malloc mem for temp catalog path!\n");
                 strcpy(buffer, fullPath);
-                PushOrder(&dirsToLook, buffer);
+                PushOrder(&directory_list, buffer);
             }
             else if (fnmatch(fileName, entity->d_name, 0) == 0)
             // (strcmp(entity->d_name, fileName) == 0)
@@ -69,16 +66,15 @@ int file_searcher(char *rootPath, int *countFilesWatched, char *fileName)
                 unsigned char gMode = ed.st_mode >> 3 & 7;
                 unsigned char aMode = ed.st_mode >> 0 & 7;
 
-                char formatedTime[256];
+                char formattedTime[256];
                 struct tm *tmp;
                 tmp = localtime(&ed.st_ctime);
                 if (tmp == NULL)
                 {
-
                     fprintf(stderr, "Error on converting to localtime...");
                     continue;
                 }
-                if (strftime(formatedTime, sizeof(formatedTime), "%H:%M:%S %d/%m/%Y", tmp) == 0)
+                if (strftime(formattedTime, sizeof(formattedTime), "%H:%M:%S %d/%m/%Y", tmp) == 0)
                 {
 
                     fprintf(stderr, "strftime returned 0");
@@ -86,40 +82,36 @@ int file_searcher(char *rootPath, int *countFilesWatched, char *fileName)
                 }
 
                 printf(
-                    "Full Path: %s\nSize: %ld bytes\nCreated: %s\nMode: %d%d%d\nIndex descriptor number: %ld\n",
+                    "path: %s, size: %ld, bytes, date created: %s, mode: %d%d%d, index descriptor number: %ld\n",
                     fullPath,
                     ed.st_size,
-                    formatedTime,
+                    formattedTime,
                     uMode, gMode, aMode,
                     ed.st_ino);
             }
         }
         else
         {
-
             printError(fullPath, "errorgetstat", entity->d_name);
         }
     }
 
     // Checking subfolders recursively
-    while (dirsToLook)
+    while (directory_list)
     {
 
-        char *fullPath = (char *)PopOrder(&dirsToLook);
-        int returnValue = file_searcher(fullPath, countFilesWatched, fileName);
+        char *fullPath = (char *)PopOrder(&directory_list);
+        int return_value = file_searcher(fullPath, fileName);
         free(fullPath);
-        if (returnValue == 0)
+        if (return_value == 0)
             fileFound = TRUE;
     }
 
     // Cleaning folders if we have them
-    while (dirsToLook)
+    while (directory_list)
     {
-
-        free(PopOrder(&dirsToLook));
+        free(PopOrder(&directory_list));
     }
-
-    printf("File has been found! Scanned: %d files and folders\n", *countFilesWatched);
 
     return fileFound ? 0 : 1;
 }
@@ -140,25 +132,23 @@ int main(int argc, char *argv[], char *envp[])
 
     start = clock();
 
-    if (argc != 3)
-        return fprintf(stderr, "Invalid arguments count! Should be 2 arguments!\n");
-
-    int countFilesWatched = 0;
+    if (argc != 3 || argc != 2)
+        return fprintf(stderr, "Usage: tafuta <FILE> <PATH> <SEARCH>\n\n");
 
     char path[PATH_MAX];
     sprintf(path, "%s", argv[2]);
 
-    int retVal = file_searcher(path, &countFilesWatched, argv[1]);
+    int return_value = file_searcher(path, argv[1]);
 
-    if (retVal == 1)
+    if (return_value == 1)
     {
 
         printf("File has NOT been found!\n");
     }
-    else if (retVal != 0)
+    else if (return_value != 0)
     {
 
-        fprintf(stderr, "Fatal error occured while trying to search file!\n");
+        fprintf(stderr, "Error occured while searching for the file\n");
     }
     end = clock();
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
