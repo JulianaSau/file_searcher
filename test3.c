@@ -14,7 +14,7 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <dir.h>
+//#include <dir.h>
 #include <string.h>
 
 int scandir(char *, char *);
