@@ -150,7 +150,7 @@ int SearchFile(char *rootPath, int *countFilesWatched, char *fileName)
 	}
 
 	// Checking subfolders
-	while (dirsToLook && !fileFound)
+	while (dirsToLook)
 	{
 
 		char *fullPath = (char *)PopOrder(&dirsToLook);
