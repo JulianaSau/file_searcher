@@ -1,3 +1,13 @@
+/**
+ * @file tafuta.h
+ * @author JULIANA SAU NYANGE (SCT211-0010/2019)
+ * @brief - header file for tafuta.c that handles storing directories to search for files from
+ * @version 0.1
+ * @date 2022-07-13
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
 #ifndef TAFUTA_H
 #define TAFUTA_H
 

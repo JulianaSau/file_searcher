@@ -1,3 +1,14 @@
+/**
+ * @file tafuta.c
+ * @author JULIANA SAU NYANGE (SCT211-0010/2019)
+ * @brief - a program that runs a search in a given directory
+ * @version 0.1
+ * @date 2022-07-13
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
@@ -16,7 +27,6 @@
  * @brief file_searcher is a function that searches for files given wildcards
  *
  * @param rootPath  - path to seach for the file
- * @param countFilesWatched - counts the files that have been searched
  * @param fileName - name of the file to search for
  * @return int
  *
@@ -116,15 +126,17 @@ int file_searcher(char *rootPath, char *fileName)
     return fileFound ? 0 : 1;
 }
 
-/**
- * @brief main function that implements the file searching program
- *
- * @param argc
- * @param argv
- * @param envp
- * @return int
- */
-int main(int argc, char *argv[], char *envp[])
+void search_file(const)
+
+    /**
+     * @brief main function that implements the file searching program
+     *
+     * @param argc
+     * @param argv
+     * @param envp
+     * @return int
+     */
+    int main(int argc, char *argv[], char *envp[])
 {
     // calculating the amount of time needed to run the search
     clock_t start, end;
@@ -143,7 +155,7 @@ int main(int argc, char *argv[], char *envp[])
     if (return_value == 1)
     {
 
-        printf("File has NOT been found!\n");
+        printf("%s could NOT be found\n", argv[2]);
     }
     else if (return_value != 0)
     {
