@@ -72,6 +72,11 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
                 if (searchParam != NULL)
                 {
                     search_file(fullPath, searchParam);
+                    continue;
+                }
+                else
+                {
+                    continue;
                 }
                 fileFound = TRUE;
 
