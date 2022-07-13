@@ -160,7 +160,7 @@ int main(int argc, char *argv[], char *envp[])
     char search_param[255];
     if (argv[3] == NULL)
     {
-        sprintf(search_param, "%s", NULL);
+        search_param = NULL;
     }
     else
     {
