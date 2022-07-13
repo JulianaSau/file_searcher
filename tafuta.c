@@ -60,7 +60,6 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
             if (!dMode)
             {
                 // Catalog
-
                 char *buffer = (char *)malloc(sizeof(char) * PATH_MAX);
                 if (!buffer)
                     return fprintf(stderr, "Error when trying to malloc memory for temporary catalog path\n");
@@ -69,7 +68,7 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
             }
             else if (fnmatch(fileName, entity->d_name, 0) == 0)
             {
-                if (searchParam != NULL)
+                if (searchParam != " ")
                 {
                     search_file(fullPath, searchParam);
                     continue;
