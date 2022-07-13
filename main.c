@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <fnmatch.h>
 
 #define TRUE 1
 #define FALSE 0
@@ -106,12 +107,11 @@ int SearchFile(char *rootPath, int *countFilesWatched, char *fileName)
 				strcpy(buffer, fullPath);
 				PushOrder(&dirsToLook, buffer);
 			}
-			else if (strcmp(entity->d_name, fileName) == 0)
+			else if (fnmatch(filename, entity->d_name, 0) == 0)
+			// (strcmp(entity->d_name, fileName) == 0)
 			{
 
 				fileFound = TRUE;
-
-				printf("File has been found! Scanned: %d files and folders\n", *countFilesWatched);
 
 				unsigned char uMode = ed.st_mode >> 6 & 7;
 				unsigned char gMode = ed.st_mode >> 3 & 7;
@@ -147,9 +147,10 @@ int SearchFile(char *rootPath, int *countFilesWatched, char *fileName)
 
 			printError(fullPath, "errorgetstat", entity->d_name);
 		}
+		printf("File has been found! Scanned: %d files and folders\n", *countFilesWatched);
 	}
 
-	// Checking subfolders
+	// Checking subfolders recursively
 	while (dirsToLook)
 	{
 
