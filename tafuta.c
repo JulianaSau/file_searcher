@@ -4,6 +4,7 @@
  * @brief - a program that runs a search in a given directory
  * @version 0.1
  * @date 2022-07-13
+ * Usage: ./tafuta <FILE> <PATH> <SEARCH_TEXT>
  *
  * @copyright Copyright (c) 2022
  *
@@ -67,11 +68,10 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
                 PushOrder(&directory_list, buffer);
             }
             else if (fnmatch(fileName, entity->d_name, 0) == 0)
-            // (strcmp(entity->d_name, fileName) == 0)
             {
                 if (searchParam != NULL)
                 {
-                    search_file(entity->d_name, searchParam);
+                    search_file(fullPath, searchParam);
                 }
                 fileFound = TRUE;
 

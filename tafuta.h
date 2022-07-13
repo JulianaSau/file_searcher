@@ -95,7 +95,7 @@ int search_file(const char *filename, const char *search)
     if (fp == NULL)
     {
         printf("Unable to open file.\n");
-        printf("Please check you have read/write previleges.\n");
+        printf("Please ensure that you have read/write previleges.\n");
 
         exit(EXIT_FAILURE);
     }
