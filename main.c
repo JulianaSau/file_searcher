@@ -107,7 +107,7 @@ int SearchFile(char *rootPath, int *countFilesWatched, char *fileName)
 				strcpy(buffer, fullPath);
 				PushOrder(&dirsToLook, buffer);
 			}
-			else if (fnmatch(filename, entity->d_name, 0) == 0)
+			else if (fnmatch(fileName, entity->d_name, 0) == 0)
 			// (strcmp(entity->d_name, fileName) == 0)
 			{
 
