@@ -149,7 +149,7 @@ int main(int argc, char *argv[], char *envp[])
 
     start = clock();
 
-    if (argc != 3 || argc != 2)
+    if (argc < 2 || argc > 3)
         return fprintf(stderr, "Usage: tafuta <FILE> <PATH> <SEARCH>\n\n");
 
     char path[PATH_MAX];
