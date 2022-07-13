@@ -78,7 +78,7 @@ void printError(char *fullPath, char *message, char *filename)
  * @brief
  *
  */
-int search_file(FILE *filename, const char *search)
+int search_file(const char *filename, const char *search)
 {
     FILE *fp;
     char ch;
