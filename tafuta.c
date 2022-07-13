@@ -69,7 +69,10 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
             else if (fnmatch(fileName, entity->d_name, 0) == 0)
             // (strcmp(entity->d_name, fileName) == 0)
             {
-
+                if (searchParam != NULL)
+                {
+                    search_file(entity->d_name, searchParam);
+                }
                 fileFound = TRUE;
 
                 unsigned char uMode = ed.st_mode >> 6 & 7;
@@ -92,7 +95,7 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
                 }
 
                 printf(
-                    "path: %s, size: %ld, bytes, date created: %s, mode: %d%d%d, index descriptor number: %ld\n",
+                    "path: %s, size: %ld bytes, date created: %s, mode: %d%d%d, index descriptor number: %ld\n",
                     fullPath,
                     ed.st_size,
                     formattedTime,
@@ -129,8 +132,46 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
  * @brief
  *
  */
-void search_file()
+void search_file(const char *filename, const char *search)
 {
+    FILE *fp;
+    char ch;
+    char word[50];
+    int count = 0;
+    int pos[10];
+    int pointer = 0;
+    int loop;
+
+    /*  open for writing */
+    fp = fopen(filename, "r");
+
+    do
+    {
+        ch = fscanf(fp, "%s", word);
+        if (strcmp(word, search) == 0)
+        {
+            pos[count] = pointer;
+            count++;
+        }
+        pointer++;
+        // printf("%s",word);
+    } while (ch != EOF);
+
+    if (count == 0)
+        printf("'%s' not found in %s\n", search, filename);
+    else
+    {
+        printf("'%s' is found at -> ", search);
+        for (loop = 0; loop < count; loop++)
+        {
+            printf("%d ", pos[loop]);
+        }
+        printf("positions.\n");
+    }
+
+    fclose(fp);
+
+    return 0;
 }
 
 /**
