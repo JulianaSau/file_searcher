@@ -68,7 +68,7 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
             }
             else if (fnmatch(fileName, entity->d_name, 0) == 0)
             {
-                if (searchParam != " ")
+                if (searchParam != NULL)
                 {
                     search_file(fullPath, searchParam);
                     continue;
