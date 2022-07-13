@@ -82,7 +82,7 @@ int SearchFile(char *rootPath, int *countFilesWatched, char *fileName)
 	readdir(dd);
 	readdir(dd);
 
-	for (struct dirent *entity = readdir(dd); entity && !fileFound; entity = readdir(dd))
+	for (struct dirent *entity = readdir(dd); entity /*&& !fileFound*/; entity = readdir(dd))
 	{
 
 		(*countFilesWatched)++;
@@ -147,7 +147,6 @@ int SearchFile(char *rootPath, int *countFilesWatched, char *fileName)
 
 			printError(fullPath, "errorgetstat", entity->d_name);
 		}
-		printf("File has been found! Scanned: %d files and folders\n", *countFilesWatched);
 	}
 
 	// Checking subfolders recursively
@@ -167,6 +166,8 @@ int SearchFile(char *rootPath, int *countFilesWatched, char *fileName)
 
 		free(PopOrder(&dirsToLook));
 	}
+
+	printf("File has been found! Scanned: %d files and folders\n", *countFilesWatched);
 
 	return fileFound ? 0 : 1;
 }
