@@ -19,13 +19,14 @@ static void lookup(char *rootPath, const char *filename)
         errno = 0;
         if ((entity = readdir(dirp)) != NULL)
         {
-            if (strcmp(entity->d_name, filename) != 0)
+            if (fnmatch(filename, entity->d_name, 0) != 0)
+            // if (strcmp(entity->d_name, filename) != 0)
             {
                 printf("%hhd %s/%s\n", entity->d_type, dirname, entity->d_name);
                 continue;
             }
             // if there is a directory in the results of search, pritn out
-            else if (entity->d_type == DT_DIR && strcmp(entity->d_name, ".") != 0 && strcmp(entity->d_name, "..") != 0)
+            if (entity->d_type == DT_DIR && strcmp(entity->d_name, ".") != 0 && strcmp(entity->d_name, "..") != 0)
             {
                 char path[100] = {0};
                 strcat(path, filename);
