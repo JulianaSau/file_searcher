@@ -81,6 +81,6 @@ int main(int argc, char *argv[])
     char path[PATH_MAX];
     sprintf(path, "%s", argv[2]);
 
-    lookup(path, &noOfFilesWatched, argv[1]);
+    lookup(path, argv[1]);
     return (0);
 }
