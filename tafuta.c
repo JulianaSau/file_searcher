@@ -111,7 +111,7 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
     {
 
         char *fullPath = (char *)PopOrder(&directory_list);
-        int return_value = file_searcher(fullPath, fileName);
+        int return_value = file_searcher(fullPath, fileName, searchParam);
         free(fullPath);
         if (return_value == 0)
             fileFound = TRUE;
