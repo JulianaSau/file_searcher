@@ -3,40 +3,49 @@
 #include <stdio.h>
 #include <string.h>
 
-
-static void lookup(const char *arg)
+static void lookup(char *rootPath, const char *filename)
 {
     DIR *dirp;
-    struct dirent *dp;
+    struct dirent *entity;
 
-
-    if ((dirp = opendir(".")) == NULL) {
+    if ((dirp = opendir(rootPath)) == NULL)
+    {
         perror("couldn't open '.'");
         return;
     }
 
-
-    do {
+    do
+    {
         errno = 0;
-        if ((dp = readdir(dirp)) != NULL) {
-            if (strcmp(dp->d_name, arg) != 0)
+        if ((entity = readdir(dirp)) != NULL)
+        {
+            if (strcmp(entity->d_name, filename) != 0)
+            {
+                printf("%hhd %s/%s\n", entity->d_type, dirname, entity->d_name);
                 continue;
+            }
+            // if there is a directory in the results of search, pritn out
+            else if (entity->d_type == DT_DIR && strcmp(entity->d_name, ".") != 0 && strcmp(entity->d_name, "..") != 0)
+            {
+                char path[100] = {0};
+                strcat(path, filename);
+                strcat(path, "/");
+                strcat(path, entity->d_name);
+                lookup(path);
+            }
+            entity = readdir(dir);
 
-
-            (void) printf("found %s\n", arg);
-            (void) closedir(dirp);
-                return;
-
-
+            (void)printf("found %s\n", arg);
+            (void)closedir(dirp);
+            return;
         }
-    } while (dp != NULL);
-
+    } while (entity != NULL);
 
     if (errno != 0)
         perror("error reading directory");
     else
-        (void) printf("failed to find %s\n", arg);
-    (void) closedir(dirp);
+        (void)printf("failed to find %s\n", filename);
+    (void)closedir(dirp);
     return;
 }
 
@@ -60,7 +69,6 @@ static void lookup(const char *arg)
 //     printf("%s %s\n", dp ? "found" : "failed to find", arg);
 //     return 0;
 // }
-
 
 int main(int argc, char *argv[])
 {
