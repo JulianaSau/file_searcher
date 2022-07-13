@@ -113,15 +113,9 @@ int search_file(const char *filename, const char *search)
     } while (ch != EOF);
 
     if (count == 0)
-        printf("'%s' not found in %s\n", search, filename);
-    else
     {
-        printf("'%s' is found at -> ", search);
-        for (loop = 0; loop < count; loop++)
-        {
-            printf("%d ", pos[loop]);
-        }
-        printf("positions.\n");
+        // printf("'%s' not found in %s\n", search, filename);
+        exit(EXIT_FAILURE);
     }
 
     fclose(fp);
