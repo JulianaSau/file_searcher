@@ -42,7 +42,7 @@ int file_searcher(char *rootPath, char *fileName)
 
     // Skipping . and ..
     readdir(dir);
-    readdrir(dir);
+    readdir(dir);
 
     for (struct dirent *entity = readdir(dir); entity; entity = readdir(dir))
     {
@@ -125,18 +125,23 @@ int file_searcher(char *rootPath, char *fileName)
 
     return fileFound ? 0 : 1;
 }
+/**
+ * @brief
+ *
+ */
+void search_file()
+{
+}
 
-void search_file(const)
-
-    /**
-     * @brief main function that implements the file searching program
-     *
-     * @param argc
-     * @param argv
-     * @param envp
-     * @return int
-     */
-    int main(int argc, char *argv[], char *envp[])
+/**
+ * @brief main function that implements the file searching program
+ *
+ * @param argc
+ * @param argv
+ * @param envp
+ * @return int
+ */
+int main(int argc, char *argv[], char *envp[])
 {
     // calculating the amount of time needed to run the search
     clock_t start, end;
