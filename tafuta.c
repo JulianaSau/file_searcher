@@ -70,15 +70,12 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
             else if (fnmatch(fileName, entity->d_name, 0) == 0)
             {
                 // third parameter to search word in file found
-                if (searchParam != NULL)
-                {
-                    search_file(fullPath, searchParam);
-                    break;
-                }
-                else
-                {
-                    break;
-                }
+                // works but malfunctions when theres only three cmd arguments
+
+                // if (searchParam != NULL)
+                // {
+                //     search_file(fullPath, searchParam);
+                // }
                 fileFound = TRUE;
 
                 unsigned char uMode = ed.st_mode >> 6 & 7;
@@ -158,15 +155,7 @@ int main(int argc, char *argv[], char *envp[])
     sprintf(path, "%s", argv[2]);
 
     char search_param[255];
-    if (argv[3] == NULL)
-    {
-        search_param = NULL;
-    }
-    else
-    {
-
-        sprintf(search_param, "%s", argv[3]);
-    }
+    sprintf(search_param, "%s", argv[3]);
 
     int return_value = file_searcher(path, argv[1], search_param);
 
