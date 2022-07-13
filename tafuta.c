@@ -6,7 +6,7 @@
 #include <linux/limits.h>
 #include <string.h>
 #include <time.h>
-#include <tafuta.h>
+#include "tafuta.h"
 
 #define TRUE 1
 #define FALSE 0
