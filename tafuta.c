@@ -62,7 +62,7 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
 
                 char *buffer = (char *)malloc(sizeof(char) * PATH_MAX);
                 if (!buffer)
-                    return fprintf(stderr, "Error when trying to malloc mem for temp catalog path!\n");
+                    return fprintf(stderr, "Error when trying to malloc memory for temporary catalog path\n");
                 strcpy(buffer, fullPath);
                 PushOrder(&directory_list, buffer);
             }
@@ -127,51 +127,6 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
     }
 
     return fileFound ? 0 : 1;
-}
-/**
- * @brief
- *
- */
-int search_file(const char *filename, const char *search)
-{
-    FILE *fp;
-    char ch;
-    char word[50];
-    int count = 0;
-    int pos[10];
-    int pointer = 0;
-    int loop;
-
-    /*  open for writing */
-    fp = fopen(filename, "r");
-
-    do
-    {
-        ch = fscanf(fp, "%s", word);
-        if (strcmp(word, search) == 0)
-        {
-            pos[count] = pointer;
-            count++;
-        }
-        pointer++;
-        // printf("%s",word);
-    } while (ch != EOF);
-
-    if (count == 0)
-        printf("'%s' not found in %s\n", search, filename);
-    else
-    {
-        printf("'%s' is found at -> ", search);
-        for (loop = 0; loop < count; loop++)
-        {
-            printf("%d ", pos[loop]);
-        }
-        printf("positions.\n");
-    }
-
-    fclose(fp);
-
-    return 0;
 }
 
 /**
