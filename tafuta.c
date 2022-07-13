@@ -12,7 +12,16 @@
 #define TRUE 1
 #define FALSE 0
 
-int SearchFile(char *rootPath, int *countFilesWatched, char *fileName)
+/**
+ * @brief file_searcher is a function that searches for files given wildcards
+ *
+ * @param rootPath  - path to seach for the file
+ * @param countFilesWatched - counts the files that have been searched
+ * @param fileName - name of the file to search for
+ * @return int
+ */
+
+int file_searcher(char *rootPath, int *countFilesWatched, char *fileName)
 {
     POrderNode dirsToLook = NULL;
     int fileFound = FALSE;
@@ -25,7 +34,7 @@ int SearchFile(char *rootPath, int *countFilesWatched, char *fileName)
     readdir(dd);
     readdir(dd);
 
-    for (struct dirent *entity = readdir(dd); entity /*&& !fileFound*/; entity = readdir(dd))
+    for (struct dirent *entity = readdir(dd); entity; entity = readdir(dd))
     {
 
         (*countFilesWatched)++;
@@ -97,9 +106,9 @@ int SearchFile(char *rootPath, int *countFilesWatched, char *fileName)
     {
 
         char *fullPath = (char *)PopOrder(&dirsToLook);
-        int retVal = SearchFile(fullPath, countFilesWatched, fileName);
+        int returnValue = file_searcher(fullPath, countFilesWatched, fileName);
         free(fullPath);
-        if (retVal == 0)
+        if (returnValue == 0)
             fileFound = TRUE;
     }
 
@@ -115,8 +124,21 @@ int SearchFile(char *rootPath, int *countFilesWatched, char *fileName)
     return fileFound ? 0 : 1;
 }
 
+/**
+ * @brief main function that implements the file searching program
+ *
+ * @param argc
+ * @param argv
+ * @param envp
+ * @return int
+ */
 int main(int argc, char *argv[], char *envp[])
 {
+    // calculating the amount of time needed to run the search
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
 
     if (argc != 3)
         return fprintf(stderr, "Invalid arguments count! Should be 2 arguments!\n");
@@ -126,7 +148,7 @@ int main(int argc, char *argv[], char *envp[])
     char path[PATH_MAX];
     sprintf(path, "%s", argv[2]);
 
-    int retVal = SearchFile(path, &countFilesWatched, argv[1]);
+    int retVal = file_searcher(path, &countFilesWatched, argv[1]);
 
     if (retVal == 1)
     {
@@ -138,6 +160,9 @@ int main(int argc, char *argv[], char *envp[])
 
         fprintf(stderr, "Fatal error occured while trying to search file!\n");
     }
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("tafuta took %f seconds to execute \n", cpu_time_used);
 
     return 0;
 }
