@@ -11,66 +11,132 @@
 #define TRUE 1
 #define FALSE 0
 
-void SearchFunction(char *rootPath, int *countFilesWatched, const char *filename)
+int SearchFile(char *rootPath, int *countFilesWatched, char *fileName)
 {
-    DIR *dir = opendir(rootPath);
+    POrderNode dirsToLook = NULL;
+    int fileFound = FALSE;
 
-    if (dir == NULL)
+    DIR *dd = opendir(rootPath);
+    if (!dd)
+        return (printError(rootPath, "erroropendir", rootPath), -1);
+
+    // Skipping . and ..
+    readdir(dd);
+    readdir(dd);
+
+    for (struct dirent *entity = readdir(dd); entity /*&& !fileFound*/; entity = readdir(dd))
     {
-        return;
-    }
 
-    printf("Reading files in %s\n", rootPath);
-    //     //Skipping . and ..
-    // 	readdir(dd);
-    // 	readdir(dd);
+        (*countFilesWatched)++;
 
-    struct dirent *entity; // It could be a file or a directory
-    entity = readdir(dir); // could give null
+        char fullPath[PATH_MAX];
+        sprintf(fullPath, "%s/%s", strcmp(rootPath, "/") == 0 ? "" : rootPath, entity->d_name);
+        struct stat ed = {0};
+        int retVal = stat(fullPath, &ed);
 
-    while (entity != NULL)
-    {
-        printf("%hhd %s/%s\n", entity->d_type, rootPath, entity->d_name);
-        // if there is a directory in the results of search, search in that file also
-        if(entity->d_type == DT_DIR && strcmp(entity->d_name, "." && strcmp(entity->d_name, "..") != 0){
-            char path[100] = {0};
-            strcat(path, rootPath);
-            strcat(path, "/");
-            strcat(path, entity->d_name);
-            listFiles(path);
+        if (retVal == 0)
+        {
+
+            unsigned char dMode = ed.st_mode >> 15 & 7;
+
+            if (!dMode)
+            {
+                // Catalog
+
+                char *buffer = (char *)malloc(sizeof(char) * PATH_MAX);
+                if (!buffer)
+                    return fprintf(stderr, "Error when trying to malloc mem for temp catalog path!\n");
+                strcpy(buffer, fullPath);
+                PushOrder(&dirsToLook, buffer);
+            }
+            else if (fnmatch(fileName, entity->d_name, 0) == 0)
+            // (strcmp(entity->d_name, fileName) == 0)
+            {
+
+                fileFound = TRUE;
+
+                unsigned char uMode = ed.st_mode >> 6 & 7;
+                unsigned char gMode = ed.st_mode >> 3 & 7;
+                unsigned char aMode = ed.st_mode >> 0 & 7;
+
+                char formatedTime[256];
+                struct tm *tmp;
+                tmp = localtime(&ed.st_ctime);
+                if (tmp == NULL)
+                {
+
+                    fprintf(stderr, "Error on converting to localtime...");
+                    continue;
+                }
+                if (strftime(formatedTime, sizeof(formatedTime), "%H:%M:%S %d/%m/%Y", tmp) == 0)
+                {
+
+                    fprintf(stderr, "strftime returned 0");
+                    continue;
+                }
+
+                printf(
+                    "Full Path: %s\nSize: %ld bytes\nCreated: %s\nMode: %d%d%d\nIndex descriptor number: %ld\n",
+                    fullPath,
+                    ed.st_size,
+                    formatedTime,
+                    uMode, gMode, aMode,
+                    ed.st_ino);
+            }
         }
-        entity = readdir(dir);
+        else
+        {
+
+            printError(fullPath, "errorgetstat", entity->d_name);
+        }
     }
 
-    closedir(dir);
+    // Checking subfolders recursively
+    while (dirsToLook)
+    {
+
+        char *fullPath = (char *)PopOrder(&dirsToLook);
+        int retVal = SearchFile(fullPath, countFilesWatched, fileName);
+        free(fullPath);
+        if (retVal == 0)
+            fileFound = TRUE;
+    }
+
+    // Cleaning folders if we have them
+    while (dirsToLook)
+    {
+
+        free(PopOrder(&dirsToLook));
+    }
+
+    printf("File has been found! Scanned: %d files and folders\n", *countFilesWatched);
+
+    return fileFound ? 0 : 1;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[], char *envp[])
 {
-    // ensuring correct number of arguments are passed
+
     if (argc != 3)
         return fprintf(stderr, "Invalid arguments count! Should be 2 arguments!\n");
 
-    // listFiles(".");
+    int countFilesWatched = 0;
 
-    int noOfFilesWatched = 0;
-
-    // printing the path to the directory we are searching in
     char path[PATH_MAX];
     sprintf(path, "%s", argv[2]);
 
-    int returnVal = SearchFunction(path, &noOfFilesWatched, argv[1]);
+    int retVal = SearchFile(path, &countFilesWatched, argv[1]);
 
-    // checking for correctness of the program
-    if (returnVal == 1)
+    if (retVal == 1)
     {
 
         printf("File has NOT been found!\n");
     }
-    else if (returnVal != 0)
+    else if (retVal != 0)
     {
 
         fprintf(stderr, "Fatal error occured while trying to search file!\n");
     }
+
     return 0;
 }
