@@ -69,9 +69,11 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
             }
             else if (fnmatch(fileName, entity->d_name, 0) == 0)
             {
+                // third parameter to search word in file found
                 if (searchParam != NULL)
                 {
                     search_file(fullPath, searchParam);
+                    break;
                 }
                 else
                 {
