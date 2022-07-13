@@ -153,6 +153,7 @@ int main(int argc, char *argv[], char *envp[])
 
     char search_param[255];
     sprintf(search_param, "%s", argv[3]);
+    printf("3rd arg %s\n", argv[3]);
 
     int return_value = file_searcher(path, argv[1], search_param);
 
