@@ -132,7 +132,7 @@ int file_searcher(char *rootPath, char *fileName, char *searchParam)
  * @brief
  *
  */
-void search_file(const char *filename, const char *search)
+int search_file(const char *filename, const char *search)
 {
     FILE *fp;
     char ch;
